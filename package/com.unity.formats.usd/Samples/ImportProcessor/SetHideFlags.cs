@@ -24,38 +24,21 @@ namespace Unity.Formats.USD.Examples {
 
     public HideFlags hideFlagsSettings = HideFlags.DontSave;
 
-    public enum Operation {Overwrite, LogicalAND, LogicalOR, LogicalXOR}
-    [Tooltip("The logical operator to use when setting the flags. In most cases Or will produce expectd results")]
-    public Operation operation = Operation.LogicalOR;
-
     public void PostProcessHierarchy(PrimMap primMap, SceneImportOptions sceneImportOptions) {
       InitRegex();
 
       foreach (KeyValuePair<SdfPath, GameObject> kvp in primMap) {
         if (!IsMatch(kvp.Key)) continue;
         GameObject go = kvp.Value;
-        switch (operation) {
-          case Operation.LogicalAND:
-            go.hideFlags &= hideFlagsSettings;
-            return;
-          case Operation.LogicalOR:
-            go.hideFlags |= hideFlagsSettings;
-            return;
-          case Operation.LogicalXOR:
-            go.hideFlags ^= hideFlagsSettings;
-            return;
-          default:
-            go.hideFlags = hideFlagsSettings;
-            return;
-        }
+        go.hideFlags = hideFlagsSettings;
       }
     }
 
     void Reset() {
-      matchExpression = "/World";
+      matchExpression = "/";
       isNot = true;
       matchType = EMatchType.Wildcard;
-      compareAgainst = ECompareAgainst.UsdPath;
+      compareAgainst = ECompareAgainst.UsdName;
     }
   }
 }
